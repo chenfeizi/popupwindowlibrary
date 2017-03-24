@@ -19,14 +19,13 @@ import com.popupwindowlibrary.adapter.CouponsPopWindowAdapter;
 import com.popupwindowlibrary.bean.PopWindowInfo;
 import com.popupwindowlibrary.interfaces.OnPopWindowDismissListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PopupUtils extends PopupWindow implements AdapterView.OnItemClickListener {
 
     private View conentView;
-    private Activity mActivity;
-    private List<PopWindowInfo> infoList = new ArrayList<>();
+    private Activity activity;
+    private List<PopWindowInfo> infoList;
 
     /** 数据 */
     private ListView mListView;
@@ -56,6 +55,19 @@ public class PopupUtils extends PopupWindow implements AdapterView.OnItemClickLi
      */
     private int myAnimationStyle = -1;
 
+
+    public static PopupUtils getInstance(){
+        return new PopupUtils();
+    }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public List<PopWindowInfo> getInfoList() {
+        return infoList;
+    }
+
     public int getMyAnimationStyle() {
         return myAnimationStyle;
     }
@@ -67,9 +79,25 @@ public class PopupUtils extends PopupWindow implements AdapterView.OnItemClickLi
     public int getIds() {
         return ids;
     }
-
+    
     public boolean isAnimation() {
         return isAnimation;
+    }
+    
+    public PopupUtils setActivity(Activity activity) {
+        this.activity = activity;
+        if (getActivity() == null){
+            new NullPointerException("上下文不能为空");
+        }
+        return this;
+    }
+
+    public PopupUtils setInfoList(List<PopWindowInfo> infoList) {
+        this.infoList = infoList;
+        if (getInfoList() == null){
+            new NullPointerException("数据不能为空");
+        }
+        return this;
     }
 
     public PopupUtils setMyAnimationStyle(int myAnimationStyle) {
@@ -96,24 +124,13 @@ public class PopupUtils extends PopupWindow implements AdapterView.OnItemClickLi
     public PopupUtils(){
     }
 
-    /**
-     *
-     * @param activity :
-     * @param list      :数据
-     */
-    public PopupUtils (Activity activity, List<PopWindowInfo> list){
-        mActivity = activity;
-        infoList = list;
-
-    }
-
     public PopupUtils init(){
         init(getAdapter());
         return this;
     }
 
     private void init(BaseAdapter adapter){
-        LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         conentView = inflater.inflate(R.layout.popup_window, null);
 
         initView(conentView, adapter);
@@ -155,7 +172,7 @@ public class PopupUtils extends PopupWindow implements AdapterView.OnItemClickLi
 
         if(adapter == null){
             if (myAdapter == null) {
-                myAdapter = new CouponsPopWindowAdapter(mActivity, infoList, getIds());
+                myAdapter = new CouponsPopWindowAdapter(activity, getInfoList(), getIds());
             }
             mListView.setAdapter(myAdapter);
             myAdapter.notifyDataSetChanged();
@@ -175,7 +192,7 @@ public class PopupUtils extends PopupWindow implements AdapterView.OnItemClickLi
                 listItem.measure(0, 0);
                 int measuredHeight = listItem.getMeasuredHeight();
 
-                measuredHeight = measuredHeight * infoList.size();// listview内容的总高度
+                measuredHeight = measuredHeight * getInfoList().size();// listview内容的总高度
 
                 int y = (int) event.getY();// 手指按下的高度
                 if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -234,9 +251,9 @@ public class PopupUtils extends PopupWindow implements AdapterView.OnItemClickLi
      * @param bgAlpha
      */
     public void backgroundAlpha(float bgAlpha) {
-        WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
+        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
         lp.alpha = bgAlpha; // 0.0-1.0
-        mActivity.getWindow().setAttributes(lp);
+        activity.getWindow().setAttributes(lp);
     }
 
     @Override
