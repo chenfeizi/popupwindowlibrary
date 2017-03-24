@@ -1,0 +1,19 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light" />
+
+
+    <!-- ================================================ pop滑出  ================================================ -->
+    <style name="top_down">
+        <!-- PopupWindow上到下弹出的效果 -->
+        <item name="android:windowEnterAnimation">@anim/pop_in_uptodown</item>
+        <item name="android:windowExitAnimation">@anim/pop_out_downtoup</item>
+    </style>
+	<style name="down_top">
+        <!-- PopupWindow下到上弹出的效果 -->
+        <item name="android:windowEnterAnimation">@anim/pop_in_downtoup</item>
+        <item name="android:windowExitAnimation">@anim/pop_out_uptodown</item>
+    </style>
+    
+
+</resources>
